@@ -1,0 +1,28 @@
+---
+- name: clone the CesarDatabase repo
+  ansible.builtin.git:
+    repo: 'https://{{ git_token }}@github.com/cesaraustralia/CesarDatabase.git'
+    dest: /srv/shiny-server/CesarDatabase
+    update: yes
+
+- name: clone the ausresistancemap repo
+  ansible.builtin.git:
+    repo: 'https://{{ git_token }}@github.com/cesaraustralia/ausresistancemap.git'
+    dest: /srv/shiny-server/AusResistanceMap
+    update: yes
+
+- name: clone the pestimator repo
+  ansible.builtin.git:
+    repo: 'https://github.com/cesaraustralia/daragrub.git'
+    dest: /srv/shiny-server/Pestimator
+    update: yes
+
+
+- name: change shiny server file permissions (github action req)
+  become: yes
+  file:
+    path: /srv
+    state: directory
+    recurse: yes
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"

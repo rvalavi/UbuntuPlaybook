@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+  postgis:
+    image: postgis/postgis:latest
+    ports:
+      - 5432:5432
+    environment:
+     - POSTGRES_USER={{ dbuser }}
+     - POSTGRES_PASSWORD={{ dbpass }}
+     - POSTGRES_DB={{ dbname }}
+    volumes:
+     - /var/lib/postgresql/data:/var/lib/postgresql/data
+     - /home/{{ remote_user }}/.db_upload:/home/db_upload # connection to database shiny app
+  shiny:
+    user: "${UID}:${GID}"
+    image: "{{ ecr_repo_url }}:{{ shiny_tag }}"
+    ports:
+     - 80:3838
+    volumes:
+     - /srv/shiny-server:/srv/shiny-server
+     - /var/log/shiny-server:/var/log/shiny-server
+     - /home/{{ remote_user }}/.db_upload:/home/shiny/.db_upload # connection to database shiny app
+  rstudio:
+    image: rocker/rstudio:latest
+    ports:
+      - 8787:8787
+    environment:
+      - USER={{ rsuser }}
+      - PASSWORD={{ rspass }}
+    volumes:
+      - /srv/shiny-server:/srv/shiny-server
+      - /var/log/shiny-server:/var/log/shiny-server

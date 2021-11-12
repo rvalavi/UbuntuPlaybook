@@ -1,0 +1,13 @@
+# yaml file for setting up the server apps and tasks
+---
+- name: Configure my ubuntu
+  hosts: all
+  become: yes
+  vars_files:
+    - ansible_vars_file.yml
+
+  # define the roles/takse for ansible to run
+  roles: 
+    - install_packages
+    - clone_repos
+    - setup_containers
